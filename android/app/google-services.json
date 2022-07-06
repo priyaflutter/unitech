@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "983299573013",
+    "project_id": "unitech-c362a",
+    "storage_bucket": "unitech-c362a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:983299573013:android:a8eaf93a6449fee2bcd51c",
+        "android_client_info": {
+          "package_name": "com.example.unitech"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "983299573013-n13qm3gpiovt8rd7vb4sof0jef2lp3vb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4KPWjdsyn_zhhQFXmaEC2ILJwW0Vbx0A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "983299573013-n13qm3gpiovt8rd7vb4sof0jef2lp3vb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
