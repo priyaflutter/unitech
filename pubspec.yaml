@@ -45,13 +45,20 @@ dependencies:
   country_code_picker:
   flutter_animated_dialog:
   otp_screen:
-  firebase_auth: 
+  firebase_auth:
   toast: ^0.3.0
   device_info_plus:
   dependencies:
   flutter_easyloading:
   firebase_core:
-  firebase_storage: 
+  firebase_storage:
+  intl:
+  google_maps_flutter:
+  google_map_location_picker_flutter:
+  flutter_sheet_localization:
+  flutter_google_places:
+  pin_code_fields: ^7.4.0
+  
 #  fluttertoast: 8.0.9
 
    

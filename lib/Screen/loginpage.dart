@@ -7,11 +7,11 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 import 'package:unitech/Provider/ProviderData.dart';
-import 'package:unitech/Registration.dart';
 import 'package:http/http.dart' as http;
+import 'package:unitech/Screen/Registration.dart';
+import 'package:unitech/Screen/Tournament_Registration.dart';
+import 'package:unitech/View_Data/ListData.dart';
 import 'package:unitech/main.dart';
-import 'package:unitech/otpscreen.dart';
-import 'package:unitech/viewpage.dart';
 
 class loginpage extends StatefulWidget {
   const loginpage({Key? key}) : super(key: key);
@@ -216,7 +216,7 @@ class _loginpageState extends State<loginpage> {
                                             .then((value) {
                                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
 
-                                                return viewpage(response);
+                                                return Registration();
                                           },));
 
                                         });

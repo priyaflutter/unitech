@@ -2,18 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 import 'package:unitech/Provider/ProviderData.dart';
-import 'package:unitech/loginpage.dart';
-import 'package:unitech/otpscreen.dart';
-import 'package:unitech/viewpage.dart';
-
+import 'package:unitech/Screen/otpscreen.dart';
+import 'package:unitech/View_Data/ListData.dart';
+import 'package:unitech/Screen/loginpage.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -23,15 +19,15 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  
   final ProviderData provider = ProviderData();
 
-  DateTime dd=DateTime.now();
-
-
-
+  DateTime dd = DateTime.now();
+  String otp='';
   @override
   Widget build(BuildContext context) {
+
+    otp=Random().nextInt(999999).toString().padLeft(6, '0');
+    
     double theight = MediaQuery.of(context).size.height;
     double twidth = MediaQuery.of(context).size.width;
     double tappbar = kToolbarHeight;
@@ -174,7 +170,6 @@ class _RegisterState extends State<Register> {
                                 : null),
                       ),
                     ),
-
                     Form(
                       key: form,
                       child: Container(
@@ -298,15 +293,15 @@ class _RegisterState extends State<Register> {
                         decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                                 borderSide:
-                                BorderSide(color: Colors.black, width: 2)),
+                                    BorderSide(color: Colors.black, width: 2)),
                             focusedBorder: OutlineInputBorder(
                                 borderSide:
-                                BorderSide(color: Colors.black, width: 2)),
+                                    BorderSide(color: Colors.black, width: 2)),
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Colors.black,
-                                  width: 5,
-                                )),
+                              color: Colors.black,
+                              width: 5,
+                            )),
                             hintText: "Enter Mobile Number",
                             hintStyle: TextStyle(color: Colors.black),
                             prefixIcon: Icon(Icons.phone, color: Colors.black),
@@ -318,59 +313,78 @@ class _RegisterState extends State<Register> {
                     Row(
                       children: [
                         Expanded(child: SizedBox()),
-
                         InkWell(
                           onTap: () async {
                             String mobileno1 = mobileno.text;
 
-                            // var url = Uri.parse(
-                            //     'http://gameon.unitechitsolution.in/api_partner/check-mobile');
-                            // var response = await http.post(url,
-                            //     body: {
-                            //       'mobile': mobileno1,
-                            //       'otp': "2310"
-                            //     });
-                            // print('Response status: ${response.statusCode}');
-                            // print('Response body: ${response.body}');
+                            // if(mobileno.text.isEmpty)
+                            //   {
+                            //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            //       duration: Duration(seconds: 5),
+                            //       content: Text("Please Enter Mobile No."),
+                            //       backgroundColor: Colors.black,
+                            //     ));
+                            //   }
+                            // else{
+                            //   print("otpppppppppppp");
+                            //   await FirebaseAuth.instance.verifyPhoneNumber(
+                            //     phoneNumber: '+91 ${mobileno1}',
+                            //     verificationCompleted: (PhoneAuthCredential credential) {
                             //
-                            // var mobileotp = jsonDecode(response.body);
-                            //
-                            // if (mobileotp["success"] == true) {
-
-                              await FirebaseAuth.instance.verifyPhoneNumber(
-                                phoneNumber: '+91 ${mobileno1}',
-                                verificationCompleted: (PhoneAuthCredential credential) {},
-                                verificationFailed: (FirebaseAuthException e) {},
-                                timeout: Duration(seconds: 120),
-                                codeSent: (String verificationId, int? resendToken) {
-                                  setState(() {
-                                    verifyid=verificationId;
-                                  });
-                                  Navigator.pushReplacement(context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return otpscreen(mobileno1,verifyid);
-                                        },
-                                      ));
-                                },
-                                codeAutoRetrievalTimeout: (String verificationId) {
-
-                                  if(verificationId==verificationId)
-                                    {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                          content: Text("OTP Expaire")));
-                                    }
-                                },
-                              );
-
-
-                            // } else {
-                            //   Toast.show(
-                            //       "Please Enter Vaild Mobile.No",
-                            //       duration: Toast.lengthShort,
-                            //       gravity: Toast.center);
+                            //     },
+                            //     verificationFailed: (FirebaseAuthException e) {},
+                            //     timeout: Duration(seconds: 120),
+                            //     codeSent: (String verificationId, int? resendToken) {
+                            //       setState(() {
+                            //         verifyid=verificationId;
+                            //       });
+                            //       Navigator.push(context,
+                            //           MaterialPageRoute(
+                            //             builder: (context) {
+                            //               return otpscreenn(mobileno1,verifyid);
+                            //             },
+                            //           ));
+                            //     },
+                            //     codeAutoRetrievalTimeout: (String verificationId) {
+                            //       if(verificationId==verificationId)
+                            //       {
+                            //         ScaffoldMessenger.of(context)
+                            //             .showSnackBar(SnackBar(
+                            //             content: Text("OTP Expaire")));
+                            //       }
+                            //     },
+                            //   );
                             // }
+
+                            if(mobileno.text.length !=10)
+                              {
+                                ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                            content: Text("Please Enter Valid Mobile No")));
+                              }
+                            else{
+                              var url = Uri.parse(
+                                  'http://sms.unitechitsolution.in:6005/api/v2/SendSMS?SenderId=UNITCH&Is_Unicode=false&Is_Flash=false&Message=Dear user $otp is your Unitech IT Solution verification code, thank you for registration.&MobileNumbers=91${mobileno.text}&ApiKey=AI2aF6zxu1Mtv0NcUYKzkNxa+Sb86MmfiLXLObO0mDQ=&ClientId=85d288ac-b598-4627-a46e-0696f0446bcd');
+                              var response = await http.get(url);
+                              print('Response status: ${response.statusCode}');
+                              print('Response body: ${response.body}');
+
+                              if (response.statusCode == 200) {
+                                Navigator.push(context,
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return otpscreen(mobileno1,otp);
+                                                },
+                                              ));
+
+                              } else {
+                                Toast.show("Please Enter Vaild Mobile.No",
+                                    duration: Toast.lengthShort,
+                                    gravity: Toast.center);
+                              }
+                            }
+
+
                           },
                           child: Text("Send OTP     "),
                         )
@@ -419,65 +433,53 @@ class _RegisterState extends State<Register> {
                             provider.passstatus = true;
                           });
                         } else if (provider.image.isEmpty) {
-
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(
-                              content: Text("Please Upload Image")));
-
-
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Please Upload Image")));
                         } else if (mobileno.text.length < 10 ||
                             mobileno.text.length > 10) {
-
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(
-                              content: Text("Please Enter 10 Digit Mobile.No")));
-
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text("Please Enter 10 Digit Mobile.No")));
                         } else {
                           List<int> img =
                               File(provider.image).readAsBytesSync();
                           String imagepath = base64Encode(img);
 
-                            String name1=name.text;
-                            String mobile1=mobileno.text;
-                            String password1=password.text;
-                            String mail1=mail.text;
+                          String name1 = name.text;
+                          String mobile1 = mobileno.text;
+                          String password1 = password.text;
+                          String mail1 = mail.text;
 
+                          Map map = {
+                            'par_name': name1,
+                            'par_mobile': mobile1,
+                            'par_email': mail1,
+                            'password': password1,
+                            'par_image': imagepath,
+                            'par_device_id': "imagepath"
+                          };
 
-                            Map map={'par_name':name1,
-                              'par_mobile':mobile1,
-                              'par_email':mail1,
-                              'password':password1,
-                              'par_image':imagepath,
-                              'par_device_id':"imagepath"
-                            };
-
-
-                          var url = Uri.parse('http://gameon.unitechitsolution.in/api_partner/register-partner');
-                          var response = await http.post(url, body:map);
+                          var url = Uri.parse(
+                              'http://gameon.unitechitsolution.in/api_partner/register-partner');
+                          var response = await http.post(url, body: map);
                           print('Response status: ${response.statusCode}');
                           print('Response body: ${response.body}');
-                          var val=jsonDecode(response.body);
-                          if(val['success']==true){
-
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(
+                          var val = jsonDecode(response.body);
+                          if (val['success'] == true) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text("Registration Sucessfully")));
 
                             Future.delayed(Duration(seconds: 2)).then((value) {
-
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-
-                                    return viewpage(response);
-                              },));
-
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(
+                                builder: (context) {
+                                  return listdata();
+                                },
+                              ));
                             });
-
-                          }else{
-
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(
-                                content: Text("Try Again Later")));
-
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Try Again Later")));
                           }
                         }
                       },
@@ -518,8 +520,7 @@ Special Character''';
   String p1 = '''Email should contain Capital,small letter & Number &
 @ Must be & Special Character''';
 
-
-  String verifyid="";
+  String verifyid = "";
 
   Future<bool> onback() {
     Navigator.pushReplacement(context, MaterialPageRoute(

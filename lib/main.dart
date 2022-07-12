@@ -2,8 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:unitech/loginpage.dart';
-import 'package:unitech/viewpage.dart';
+import 'package:unitech/Screen/Registration.dart';
+import 'package:unitech/View_Data/ListData.dart';
+import 'package:unitech/Screen/loginpage.dart';
+
 
 
 void main() async {
@@ -11,7 +13,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: splash(),
+    home: Register(),
     builder: EasyLoading.init(),
   ));
 }
@@ -64,7 +66,7 @@ class _splashState extends State<splash> {
         Navigator.pushReplacement(context, MaterialPageRoute(
           builder: (context) {
             print("viewwww");
-            return loginpage();
+            return listdata();
           },
         ));
 
@@ -79,7 +81,7 @@ class _splashState extends State<splash> {
     });
   }
 
-  @override
+  @override                                 
   Widget build(BuildContext context) {
 
     double theight = MediaQuery.of(context).size.height;
